@@ -1,12 +1,5 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
-
-type Route = "home" | "game" | "results";
-
-interface RouterContextType {
-    currentRoute: Route;
-    navigate: (route: Route) => void;
-    params?: Record<string, string>;
-}
+import type { Route, RouterContextType } from "../types/routerContext.types";
 
 const RouterContext = createContext<RouterContextType | undefined>(undefined);
 

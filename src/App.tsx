@@ -1,5 +1,6 @@
 import Header from "./components/Header";
 import { RouterProvider, useRouter } from "./context/RouterContext";
+import About from "./screens/About";
 import Game from "./screens/Game";
 import Home from "./screens/Home";
 // import Results from "./screens/Results";
@@ -13,6 +14,8 @@ function AppContent() {
                 return <Home />;
             case "game":
                 return <Game />;
+            case"about":
+                return <About/>
             // case "results":
             //     return <Results />;
             default:

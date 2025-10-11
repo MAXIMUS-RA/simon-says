@@ -1,12 +1,13 @@
 import { useRouter } from "../context/RouterContext";
+import type { Route } from "../types/routerContext.types";
 
-function CustomBtn() {
+function CustomBtn({ link, name }: { link: Route; name: string }) {
     const { navigate } = useRouter();
 
     return (
-        <button className="bg-white w-30 h-10 p-2 rounded-2xl hover:bg-gray-500 duration-150" onClick={() => navigate("game")}>
-            Game
-        </button>
+        <li className="text-white px-4 py-2 rounded-full border-2 border-white hover:bg-white hover:text-indigo-600 transition duration-200" onClick={() => navigate(link)}>
+            {name}
+        </li>
     );
 }
 
