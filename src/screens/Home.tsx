@@ -1,9 +1,10 @@
 import CustomBtn from "../components/CustomBtn";
+import { useRouter } from "../context/RouterContext";
 
 function Home() {
     return (
         <div className=" w-full min-h-screen flex justify-center items-center">
-            {/* <CustomBtn></CustomBtn> */}
+            <CustomBtn link={'game'} name="Game" ></CustomBtn>
         </div>
     );
 }
