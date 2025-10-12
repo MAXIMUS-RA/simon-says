@@ -6,6 +6,7 @@ function Header() {
         { name: "Home", link: "home" },
         { name: "Game", link: "game" },
         { name: "About", link: "about" },
+        { name: "Settings", link: "settings" },
     ];
 
     return (
