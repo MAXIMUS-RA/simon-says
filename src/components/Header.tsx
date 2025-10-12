@@ -14,13 +14,14 @@ function Header() {
                 <h1 className="text-white text-2xl font-bold tracking-wider">Simon Says</h1>
                 <ul className="flex space-x-6">
                     {links.map((el) => (
-                        <li key={el.link}>
-                            <CustomBtn
-                                link={el.link}
-                                name={el.name}
-                                // className="text-white px-4 py-2 rounded-full border-2 border-white hover:bg-white hover:text-indigo-600 transition duration-200"
-                            />
-                        </li>
+                        // <li key={el.link}>
+                        <CustomBtn
+                            link={el.link}
+                            name={el.name}
+                            key={Math.random() * 10}
+                            // className="text-white px-4 py-2 rounded-full border-2 border-white hover:bg-white hover:text-indigo-600 transition duration-200"
+                        />
+                        // </li>
                     ))}
                 </ul>
             </nav>
