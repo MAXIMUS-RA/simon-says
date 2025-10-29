@@ -1,7 +1,32 @@
+import { useState, useEffect } from "react";
 import { useBussinesLogic } from "../hooks/useBussinesLogic";
+import { useColors } from "../hooks/useColors";
+import GameModal from "../components/modals/GameModal";
 
 function Game() {
     const { activeColor, currentRound, gameOver, handleColorClick, colorMap, startGame, colors, settings } = useBussinesLogic();
+
+    const [accentColor, setAccentColor] = useState("#9333ea");
+    const [highScore, setHighScore] = useState(0);
+
+    useColors(setAccentColor, "accentColor");
+
+    useEffect(() => {
+        const saved = localStorage.getItem("simonHighScore");
+        if (saved) {
+            setHighScore(parseInt(saved));
+        }
+    }, []);
+
+    useEffect(() => {
+        if (gameOver && currentRound > 0) {
+            const finalScore = currentRound - 1;
+            if (finalScore > highScore) {
+                setHighScore(finalScore);
+                localStorage.setItem("simonHighScore", finalScore.toString());
+            }
+        }
+    }, [gameOver, currentRound, highScore]);
 
     const getColorStyle = (isActive: boolean) => {
         const brightness = isActive ? "brightness-150" : "hover:brightness-110";
@@ -19,7 +44,6 @@ function Game() {
                     const endAngle = (index + 1) * anglePerSlice;
 
                     const clipPath = createPieSliceClipPath(startAngle, endAngle);
-
                     const borderStyle = getBorderStyle();
 
                     return (
@@ -75,21 +99,24 @@ function Game() {
                 <p className="text-sm text-gray-300">
                     Difficulty: <span className="capitalize font-semibold">{settings.difficulty}</span> | Colors: {settings.numberOfColors}
                 </p>
-                {gameOver && <p className="text-red-400 text-xl mt-2">Game Over! Final Score: {currentRound - 1}</p>}
+                <p className="text-sm text-gray-400 mt-2">
+                    High Score: <span className="font-bold text-yellow-400">{highScore}</span>
+                </p>
             </div>
 
             <div className="relative w-[600px] h-[600px]">
                 <div className="absolute inset-0 rounded-full overflow-hidden">{renderColorButtons()}</div>
 
                 <div
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-gradient-to-br from-[#1a1a4e] to-[#0a0a2e] border-8 border-[#2a2a4e] shadow-2xl flex items-center justify-center cursor-pointer hover:scale-105 transition-transform z-10"
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full border-8 border-[#2a2a4e] shadow-2xl flex items-center justify-center cursor-pointer hover:scale-105 transition-transform z-0"
+                    style={{ backgroundColor: accentColor }}
                     onClick={startGame}
                 >
-                    <span className="text-white text-4xl font-bold text-center">
-                        {gameOver ? "Retry" : currentRound === 0 ? "Start" : currentRound}
-                    </span>
+                    <span className="text-white text-4xl font-bold text-center">{currentRound === 0 ? "Start" : currentRound}</span>
                 </div>
             </div>
+
+            <GameModal isOpen={gameOver} score={currentRound > 0 ? currentRound - 1 : 0} highScore={highScore} onRestart={startGame} />
         </div>
     );
 }
