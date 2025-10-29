@@ -1,4 +1,4 @@
-export type Route = "home" | "game" | "results" | "about";
+export type Route = "home" | "game" | "results" | "about" | "settings";
 
 export interface RouterContextType {
     currentRoute: Route;
