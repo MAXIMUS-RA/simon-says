@@ -1,79 +1,71 @@
-import { useEffect, useState } from "react";
 import { useBussinesLogic } from "../hooks/useBussinesLogic";
-import type { Color } from "../types/bussinesLogic.types";
 
 function Game() {
     const { activeColor, currentRound, gameOver, handleColorClick, colorMap, startGame, colors, settings } = useBussinesLogic();
 
-    const getColorStyle = (color: Color, isActive: boolean) => {
+    const getColorStyle = (isActive: boolean) => {
         const brightness = isActive ? "brightness-150" : "hover:brightness-110";
         return `cursor-pointer transition-all ${brightness}`;
     };
 
     const renderColorButtons = () => {
         const numColors = colors.length;
+        const anglePerSlice = 360 / numColors;
 
-        if (numColors === 4) {
-            // Original 4-color layout
-            return (
-                <div className="absolute inset-0">
-                    <div
-                        className={`absolute top-0 left-0 w-1/2 h-1/2 rounded-tl-full border-r-[8px] border-b-[8px] border-[#1a1a2e] ${getColorStyle(
-                            "green",
-                            activeColor === "green"
-                        )}`}
-                        onClick={() => handleColorClick("green")}
-                        style={{ backgroundColor: colorMap.green }}
-                    />
-                    <div
-                        className={`absolute top-0 right-0 w-1/2 h-1/2 rounded-tr-full border-l-[8px] border-b-[8px] border-[#1a1a2e] ${getColorStyle(
-                            "red",
-                            activeColor === "red"
-                        )}`}
-                        onClick={() => handleColorClick("red")}
-                        style={{ backgroundColor: colorMap.red }}
-                    />
-                    <div
-                        className={`absolute bottom-0 left-0 w-1/2 h-1/2 rounded-bl-full border-r-[8px] border-t-[8px] border-[#1a1a2e] ${getColorStyle(
-                            "purple",
-                            activeColor === "purple"
-                        )}`}
-                        onClick={() => handleColorClick("purple")}
-                        style={{ backgroundColor: colorMap.purple }}
-                    />
-                    <div
-                        className={`absolute bottom-0 right-0 w-1/2 h-1/2 rounded-br-full border-l-[8px] border-t-[8px] border-[#1a1a2e] ${getColorStyle(
-                            "blue",
-                            activeColor === "blue"
-                        )}`}
-                        onClick={() => handleColorClick("blue")}
-                        style={{ backgroundColor: colorMap.blue }}
-                    />
-                </div>
-            );
-        }
-
-        // 5 or 6 colors - circular layout
-        const angleStep = 360 / numColors;
         return (
             <div className="absolute inset-0">
                 {colors.map((color, index) => {
-                    const angle = (angleStep * index - 90) * (Math.PI / 180);
+                    const startAngle = index * anglePerSlice;
+                    const endAngle = (index + 1) * anglePerSlice;
+
+                    const clipPath = createPieSliceClipPath(startAngle, endAngle);
+
+                    const borderStyle = getBorderStyle();
+
                     return (
                         <div
                             key={color}
-                            className={`absolute w-32 h-32 rounded-full border-4 border-[#1a1a2e] ${getColorStyle(color, activeColor === color)}`}
+                            className={`absolute inset-0 ${getColorStyle(activeColor === color)}`}
                             onClick={() => handleColorClick(color)}
                             style={{
                                 backgroundColor: colorMap[color],
-                                left: `calc(50% + ${Math.cos(angle) * 200}px - 64px)`,
-                                top: `calc(50% + ${Math.sin(angle) * 200}px - 64px)`,
+                                clipPath: clipPath,
+                                WebkitClipPath: clipPath,
+                                ...borderStyle,
                             }}
                         />
                     );
                 })}
             </div>
         );
+    };
+
+    const createPieSliceClipPath = (startAngle: number, endAngle: number): string => {
+        const centerX = 50;
+        const centerY = 50;
+        const radius = 50;
+
+        const points: string[] = [`${centerX}% ${centerY}%`];
+
+        const steps = 20;
+        for (let i = 0; i <= steps; i++) {
+            const angle = startAngle + (endAngle - startAngle) * (i / steps);
+            const radian = (angle - 90) * (Math.PI / 180);
+            const x = centerX + radius * Math.cos(radian);
+            const y = centerY + radius * Math.sin(radian);
+            points.push(`${x}% ${y}%`);
+        }
+
+        return `polygon(${points.join(", ")})`;
+    };
+
+    const getBorderStyle = () => {
+        return {
+            boxShadow: `
+                inset 0 0 0 4px rgba(26, 26, 46, 0.5),
+                0 0 0 2px rgba(26, 26, 46, 0.8)
+            `,
+        };
     };
 
     return (
@@ -87,10 +79,10 @@ function Game() {
             </div>
 
             <div className="relative w-[600px] h-[600px]">
-                {renderColorButtons()}
+                <div className="absolute inset-0 rounded-full overflow-hidden">{renderColorButtons()}</div>
 
                 <div
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-gradient-to-br from-[#1a1a4e] to-[#0a0a2e] border-8 border-[#2a2a4e] shadow-2xl flex items-center justify-center cursor-pointer hover:scale-105 transition-transform"
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-gradient-to-br from-[#1a1a4e] to-[#0a0a2e] border-8 border-[#2a2a4e] shadow-2xl flex items-center justify-center cursor-pointer hover:scale-105 transition-transform z-10"
                     onClick={startGame}
                 >
                     <span className="text-white text-4xl font-bold text-center">

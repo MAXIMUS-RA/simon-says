@@ -1,9 +1,10 @@
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import type { Difficulty, SettingsForm } from "../types/settings.types";
+import { useDebounce } from "../hooks/useDebounce";
 
 function Settings() {
-    const { register, handleSubmit, formState, setValue, watch } = useForm<SettingsForm>({
+    const { handleSubmit, formState, setValue, control } = useForm<SettingsForm>({
         defaultValues: {
             backgroundColor: "#9333ea",
             accentColor: "#6366f1",
@@ -12,14 +13,24 @@ function Settings() {
         },
     });
 
-    const backgroundColor = watch("backgroundColor");
-    const difficulty = watch("difficulty");
-    const numberOfColors = watch("numberOfColors");
-    const accentColor = watch("accentColor");
+    const [localBackgroundColor, setLocalBackgroundColor] = useState("#9333ea");
+    const [localAccentColor, setLocalAccentColor] = useState("#6366f1");
+
+    const debouncedBackgroundColor = useDebounce(localBackgroundColor, 300);
+    const debouncedAccentColor = useDebounce(localAccentColor, 300);
+
+    useEffect(() => {
+        setValue("backgroundColor", debouncedBackgroundColor);
+    }, [debouncedBackgroundColor, setValue]);
+
+    useEffect(() => {
+        setValue("accentColor", debouncedAccentColor);
+    }, [debouncedAccentColor, setValue]);
 
     const onSubmit = (data: SettingsForm) => {
         try {
             localStorage.setItem("gameSettings", JSON.stringify(data));
+            window.dispatchEvent(new Event("settingsUpdated"));
             alert("Settings saved successfully!");
         } catch (error) {
             console.error("Failed to save settings:", error);
@@ -32,6 +43,8 @@ function Settings() {
         if (savedSettings) {
             try {
                 const settings = JSON.parse(savedSettings);
+                setLocalBackgroundColor(settings.backgroundColor);
+                setLocalAccentColor(settings.accentColor);
                 setValue("backgroundColor", settings.backgroundColor);
                 setValue("accentColor", settings.accentColor);
                 setValue("difficulty", settings.difficulty);
@@ -49,7 +62,7 @@ function Settings() {
     };
 
     return (
-        <div className="w-full min-h-screen mx-auto text-white" style={{ backgroundColor }}>
+        <div className="w-full min-h-screen mx-auto text-white" style={{ backgroundColor: localBackgroundColor }}>
             <div className="container mx-auto px-4 py-10">
                 <div className="max-w-2xl mx-auto">
                     <h1 className="text-4xl text-center mb-8 font-bold">Settings</h1>
@@ -67,12 +80,13 @@ function Settings() {
                                         <input
                                             id="backgroundColor"
                                             type="color"
-                                            {...register("backgroundColor")}
+                                            value={localBackgroundColor}
+                                            onChange={(e) => setLocalBackgroundColor(e.target.value)}
                                             className="w-24 h-24 rounded-lg cursor-pointer border-4 border-white/20"
                                         />
                                         <input
                                             type="text"
-                                            value={backgroundColor}
+                                            value={localBackgroundColor}
                                             readOnly
                                             className="flex-1 px-4 py-2 rounded bg-white/10 text-white font-mono"
                                         />
@@ -87,12 +101,13 @@ function Settings() {
                                         <input
                                             id="accentColor"
                                             type="color"
-                                            {...register("accentColor")}
+                                            value={localAccentColor}
+                                            onChange={(e) => setLocalAccentColor(e.target.value)}
                                             className="w-24 h-24 rounded-lg cursor-pointer border-4 border-white/20"
                                         />
                                         <input
                                             type="text"
-                                            value={accentColor}
+                                            value={localAccentColor}
                                             readOnly
                                             className="flex-1 px-4 py-2 rounded bg-white/10 text-white font-mono"
                                         />
@@ -107,49 +122,67 @@ function Settings() {
                             <div className="space-y-4">
                                 <div>
                                     <label className="block text-lg font-medium mb-3">Difficulty Level</label>
-                                    <div className="grid grid-cols-3 gap-4">
-                                        {(["easy", "medium", "hard"] as Difficulty[]).map((level) => (
-                                            <label
-                                                key={level}
-                                                className={`relative flex flex-col items-center p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                                                    difficulty === level ? "border-white bg-white/20" : "border-white/30 hover:border-white/50"
-                                                }`}
-                                            >
-                                                <input type="radio" value={level} {...register("difficulty")} className="sr-only" />
-                                                <span className="text-xl font-bold capitalize mb-1">{level}</span>
-                                                <span className="text-sm text-center">{difficultyInfo[level].speed}</span>
-                                                <span className="text-xs text-gray-300 text-center mt-2">{difficultyInfo[level].description}</span>
-                                            </label>
-                                        ))}
-                                    </div>
+                                    <Controller
+                                        name="difficulty"
+                                        control={control}
+                                        render={({ field: difficultyField }) => (
+                                            <div className="grid grid-cols-3 gap-4">
+                                                {(["easy", "medium", "hard"] as Difficulty[]).map((level) => (
+                                                    <button
+                                                        key={level}
+                                                        type="button"
+                                                        onClick={() => difficultyField.onChange(level)}
+                                                        className={`relative flex flex-col items-center p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                                                            difficultyField.value === level
+                                                                ? "border-white bg-white/20"
+                                                                : "border-white/30 hover:border-white/50"
+                                                        }`}
+                                                    >
+                                                        <span className="text-xl font-bold capitalize mb-1">{level}</span>
+                                                        <span className="text-sm text-center">{difficultyInfo[level].speed}</span>
+                                                        <span className="text-xs text-gray-300 text-center mt-2">
+                                                            {difficultyInfo[level].description}
+                                                        </span>
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    />
                                 </div>
 
-                                <div>
-                                    <label htmlFor="numberOfColors" className="block text-lg font-medium mb-2">
-                                        Number of Colors: {numberOfColors}
-                                    </label>
-                                    <input
-                                        id="numberOfColors"
-                                        type="range"
-                                        min="4"
-                                        max="6"
-                                        {...register("numberOfColors", { valueAsNumber: true })}
-                                        className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-white"
-                                    />
-                                    <div className="flex justify-between text-sm text-gray-300 mt-2">
-                                        <span>4 Colors (Easy)</span>
-                                        <span>5 Colors</span>
-                                        <span>6 Colors (Hard)</span>
-                                    </div>
-                                </div>
+                                <Controller
+                                    name="numberOfColors"
+                                    control={control}
+                                    render={({ field: colorsField }) => (
+                                        <div>
+                                            <label htmlFor="numberOfColors" className="block text-lg font-medium mb-2">
+                                                Number of Colors: {colorsField.value}
+                                            </label>
+                                            <input
+                                                id="numberOfColors"
+                                                type="range"
+                                                min="4"
+                                                max="6"
+                                                value={colorsField.value}
+                                                onChange={(e) => colorsField.onChange(Number(e.target.value))}
+                                                className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-white"
+                                            />
+                                            <div className="flex justify-between text-sm text-gray-300 mt-2">
+                                                <span>4 Colors (Easy)</span>
+                                                <span>5 Colors</span>
+                                                <span>6 Colors (Hard)</span>
+                                            </div>
+                                        </div>
+                                    )}
+                                />
                             </div>
                         </div>
 
                         <div className="bg-white/10 rounded-lg p-6">
                             <h2 className="text-2xl font-semibold mb-4">Preview</h2>
                             <div className="flex gap-4">
-                                <div className="flex-1 h-20 rounded-lg" style={{ backgroundColor }} />
-                                <div className="flex-1 h-20 rounded-lg" style={{ backgroundColor: accentColor }} />
+                                <div className="flex-1 h-20 rounded-lg" style={{ backgroundColor: localBackgroundColor }} />
+                                <div className="flex-1 h-20 rounded-lg" style={{ backgroundColor: localAccentColor }} />
                             </div>
                         </div>
 
@@ -158,7 +191,7 @@ function Settings() {
                                 type="submit"
                                 disabled={formState.isSubmitting}
                                 className="flex-1 py-3 px-6 rounded-lg font-semibold transition-all hover:scale-105 disabled:opacity-50"
-                                style={{ backgroundColor: accentColor }}
+                                style={{ backgroundColor: localAccentColor }}
                             >
                                 {formState.isSubmitting ? "Saving..." : "Save Settings"}
                             </button>

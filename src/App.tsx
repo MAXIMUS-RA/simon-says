@@ -1,26 +1,39 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Header from "./components/Header";
 import { RouterProvider, useRouter } from "./context/RouterContext";
 import About from "./screens/About";
 import Game from "./screens/Game";
 import Home from "./screens/Home";
 import Settings from "./screens/Settings";
-// import Results from "./screens/Results";
 
 function AppContent() {
     const { currentRoute } = useRouter();
-    const backgroundColor = useMemo(() => {
-        const savedColors = localStorage.getItem("colors");
-        if (savedColors) {
-            try {
-                const color = JSON.parse(savedColors);
-                return color.backgroundColor;
-            } catch (error) {
-                console.error("Failed to load colors", error);
-                return "#fff";
+    
+    const [backgroundColor, setBackgroundColor] = useState("#9333ea");
+
+    useEffect(() => {
+        const loadBackgroundColor = () => {
+            const savedSettings = localStorage.getItem("gameSettings");
+            if (savedSettings) {
+                try {
+                    const settings = JSON.parse(savedSettings);
+                    setBackgroundColor(settings.backgroundColor || "#9333ea");
+                } catch (error) {
+                    console.error("Failed to load colors", error);
+                    setBackgroundColor("#9333ea");
+                }
             }
-        }
-        return "#fff";
+        };
+
+        loadBackgroundColor();
+
+        window.addEventListener("storage", loadBackgroundColor);
+        window.addEventListener("settingsUpdated", loadBackgroundColor);
+
+        return () => {
+            window.removeEventListener("storage", loadBackgroundColor);
+            window.removeEventListener("settingsUpdated", loadBackgroundColor);
+        };
     }, []);
     const renderScreen = () => {
         switch (currentRoute) {
