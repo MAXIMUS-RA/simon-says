@@ -14,7 +14,7 @@ function About() {
     const features = ["Progressive difficulty", "Sound effects", "Visual feedback", "Score tracking"];
 
     return (
-        <div className="max-w-4xl mx-auto px-6 py-12">
+        <div className=" px-6 py-12">
             <PageHeader title="About Simon Says" />
 
             <InfoCard title="What is Simon Says?">
