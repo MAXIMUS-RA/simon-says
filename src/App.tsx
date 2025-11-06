@@ -18,11 +18,13 @@ function AppContent() {
             <Header />
             <div className="pt-24">
                 <Routes>
+
                     <Route path="/home" element={<Home />} />
                     <Route path="/game" element={<Game />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/results" element={<Results />} />
+
                 </Routes>
             </div>
         </div>
