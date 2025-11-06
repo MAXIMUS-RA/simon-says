@@ -16,7 +16,7 @@ function AppContent() {
     return (
         <div className="min-h-screen transition-colors duration-300 relative" style={{ backgroundColor }}>
             <Header />
-            <div className="pt-24">
+            <div className="pt-24 mx-auto container">
                 <Routes>
 
                     <Route path="/home" element={<Home />} />
