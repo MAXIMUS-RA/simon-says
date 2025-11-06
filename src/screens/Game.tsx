@@ -49,7 +49,7 @@ function Game() {
                     return (
                         <div
                             key={color}
-                            className={`absolute inset-0 ${getColorStyle(activeColor === color)}`}
+                            className={`absolute -inset-1 ${getColorStyle(activeColor === color)}`}
                             onClick={() => handleColorClick(color)}
                             style={{
                                 backgroundColor: colorMap[color],
@@ -105,7 +105,7 @@ function Game() {
             </div>
 
             <div className="relative w-[600px] h-[600px]">
-                <div className="absolute inset-0 rounded-full overflow-hidden">{renderColorButtons()}</div>
+                <div className="absolute -inset-0 rounded-full overflow-hidden">{renderColorButtons()}</div>
 
                 <div
                     className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full border-8 border-[#2a2a4e] shadow-2xl flex items-center justify-center cursor-pointer hover:scale-105 transition-transform z-0"
