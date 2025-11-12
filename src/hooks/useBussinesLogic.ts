@@ -59,12 +59,11 @@ export function useBussinesLogic() {
     };
 
     const startGame = () => {
-        setSequenceColor([]);
+        const firstColor = colors[Math.floor(Math.random() * colors.length)];
+        setSequenceColor([firstColor]);
         setUserSequence([]);
         setGameOver(false);
         setCurrentRound(1);
-        const firstColor = colors[Math.floor(Math.random() * colors.length)];
-        setSequenceColor([firstColor]);
     };
 
     useEffect(() => {

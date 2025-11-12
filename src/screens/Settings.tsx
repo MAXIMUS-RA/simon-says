@@ -1,10 +1,18 @@
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import type { Difficulty, SettingsForm } from "../types/settings.types";
+import { yupResolver } from "@hookform/resolvers/yup";
+import type { Difficulty } from "../types/settings.types";
 import { useDebounce } from "../hooks/useDebounce";
+import { settingsSchema, type SettingsFormData } from "../schemas/settingsSchema";
 
 function Settings() {
-    const { handleSubmit, formState, setValue, control } = useForm<SettingsForm>({
+    const {
+        handleSubmit,
+        formState: { errors, isSubmitting },
+        setValue,
+        control,
+    } = useForm<SettingsFormData>({
+        resolver: yupResolver(settingsSchema),
         defaultValues: {
             backgroundColor: "#9333ea",
             accentColor: "#6366f1",
@@ -27,7 +35,7 @@ function Settings() {
         setValue("accentColor", debouncedAccentColor);
     }, [debouncedAccentColor, setValue]);
 
-    const onSubmit = (data: SettingsForm) => {
+    const onSubmit = (data: SettingsFormData) => {
         try {
             localStorage.setItem("gameSettings", JSON.stringify(data));
             window.dispatchEvent(new Event("settingsUpdated"));
@@ -91,6 +99,7 @@ function Settings() {
                                             className="flex-1 px-4 py-2 rounded bg-white/10 text-white font-mono"
                                         />
                                     </div>
+                                    {errors.backgroundColor && <p className="text-red-400 text-sm mt-2">{errors.backgroundColor.message}</p>}
                                 </div>
 
                                 <div>
@@ -112,6 +121,7 @@ function Settings() {
                                             className="flex-1 px-4 py-2 rounded bg-white/10 text-white font-mono"
                                         />
                                     </div>
+                                    {errors.accentColor && <p className="text-red-400 text-sm mt-2">{errors.accentColor.message}</p>}
                                 </div>
                             </div>
                         </div>
@@ -148,6 +158,7 @@ function Settings() {
                                             </div>
                                         )}
                                     />
+                                    {errors.difficulty && <p className="text-red-400 text-sm mt-2">{errors.difficulty.message}</p>}
                                 </div>
 
                                 <Controller
@@ -172,6 +183,7 @@ function Settings() {
                                                 <span>5 Colors</span>
                                                 <span>6 Colors (Hard)</span>
                                             </div>
+                                            {errors.numberOfColors && <p className="text-red-400 text-sm mt-2">{errors.numberOfColors.message}</p>}
                                         </div>
                                     )}
                                 />
@@ -189,11 +201,11 @@ function Settings() {
                         <div className="flex gap-4">
                             <button
                                 type="submit"
-                                disabled={formState.isSubmitting}
+                                disabled={isSubmitting}
                                 className="flex-1 py-3 px-6 rounded-lg font-semibold transition-all hover:scale-105 disabled:opacity-50"
                                 style={{ backgroundColor: localAccentColor }}
                             >
-                                {formState.isSubmitting ? "Saving..." : "Save Settings"}
+                                {isSubmitting ? "Saving..." : "Save Settings"}
                             </button>
                         </div>
                     </form>
