@@ -1,16 +1,21 @@
 import { useState } from "react";
+import { useNavigate } from "react-router"; // Import useNavigate
 import { useColors } from "../hooks/useColors";
-import { useResults } from "../hooks/useResults"; 
+import { useResults } from "../hooks/useResults";
+
 
 function Results() {
     const [accentColor, setAccentColor] = useState("#9333ea");
     const [bg, setBg] = useState("#9333ea");
     const { getStats } = useResults();
+    const navigate = useNavigate(); // Initialize hook
+
 
     useColors(setAccentColor, "accentColor");
     useColors(setBg, "backgroundColor");
 
     const stats = getStats();
+    console.log(stats);
 
 
     return (
@@ -36,8 +41,6 @@ function Results() {
             </div>
 
             <div className="bg-white/10 rounded-lg p-6">
-
-
                 {stats.totalGames === 0 ? (
                     <p className="text-gray-400 text-center py-8">No games played yet. Start playing to see your results!</p>
                 ) : (
@@ -53,7 +56,11 @@ function Results() {
                             </thead>
                             <tbody>
                                 {stats.recentGames.map((game, index) => (
-                                    <tr key={index} className="border-b border-white/10 hover:bg-white/5">
+                                    <tr
+                                        key={index}
+                                        className="border-b border-white/10 hover:bg-white/5 cursor-pointer transition-colors"
+                                        onClick={() => navigate(`/results/${game.time}`)}
+                                    >
                                         <td className="text-white py-3 px-4">{new Date(game.time).toLocaleString()}</td>
                                         <td className="text-white py-3 px-4 font-bold">{game.score}</td>
                                         <td className="text-white py-3 px-4 capitalize">{game.difficulty}</td>
@@ -70,4 +77,3 @@ function Results() {
 }
 
 export default Results;
-

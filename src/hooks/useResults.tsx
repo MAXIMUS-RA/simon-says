@@ -10,14 +10,16 @@ export interface GameResult {
 
 export function useResults() {
     const [history, setHistory] = useState<GameResult[]>([]);
+    const STORAGE_KEY = "gameResults"; 
 
     useEffect(() => {
         loadResults();
-    }, []);
+    }, []); 
 
     const loadResults = () => {
         try {
-            const saved = localStorage.getItem("gameResults");
+            const saved = localStorage.getItem(STORAGE_KEY);
+
             const parsed = saved ? JSON.parse(saved) : [];
             setHistory(parsed);
         } catch (error) {
@@ -27,6 +29,8 @@ export function useResults() {
     };
 
     const addResult = (result: GameResult) => {
+        console.log(result);
+
         const newResult: GameResult = {
             ...result,
             time: Date.now(),
@@ -36,7 +40,8 @@ export function useResults() {
         setHistory(updatedHistory);
 
         try {
-            localStorage.setItem("simonGameData", JSON.stringify(updatedHistory));
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedHistory)); 
+
         } catch (error) {
             console.error("Failed to save game result:", error);
         }
