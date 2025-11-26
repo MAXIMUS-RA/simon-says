@@ -19,7 +19,7 @@ function AppContent() {
             <div className="pt-24 mx-auto container">
                 <Routes>
 
-                    <Route path="/home" element={<Home />} />
+                    <Route  path="/" element={<Home />} />
                     <Route path="/game" element={<Game />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/settings" element={<Settings />} />

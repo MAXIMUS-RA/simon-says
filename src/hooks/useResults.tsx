@@ -28,6 +28,7 @@ export function useResults() {
     };
 
     const addResult = (result: GameResult) => {
+        console.log(result);
         const newResult: GameResult = {
             ...result,
             time: Date.now(),

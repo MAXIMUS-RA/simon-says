@@ -32,7 +32,7 @@ function Game() {
 
             addResult(newData);
         }
-    }, [gameOver, currentRound, highScore, settings.difficulty, settings.numberOfColors, addResult]);
+    }, [gameOver, currentRound, highScore, settings.difficulty, settings.numberOfColors]);
 
     const getColorStyle = (isActive: boolean) => {
         const brightness = isActive ? "brightness-150" : "hover:brightness-110";

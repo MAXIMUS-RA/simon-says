@@ -11,7 +11,7 @@ function Results() {
     useColors(setBg, "backgroundColor");
 
     const stats = getStats();
-    console.log(stats.recentGames);
+    console.log(stats);
 
 
     return (
