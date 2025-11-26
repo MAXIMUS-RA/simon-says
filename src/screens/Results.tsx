@@ -3,17 +3,20 @@ import { useNavigate } from "react-router"; // Import useNavigate
 import { useColors } from "../hooks/useColors";
 import { useResults } from "../hooks/useResults";
 
+
 function Results() {
     const [accentColor, setAccentColor] = useState("#9333ea");
     const [bg, setBg] = useState("#9333ea");
     const { getStats } = useResults();
     const navigate = useNavigate(); // Initialize hook
 
+
     useColors(setAccentColor, "accentColor");
     useColors(setBg, "backgroundColor");
 
     const stats = getStats();
     console.log(stats);
+
 
     return (
         <div className="w-full min-h-screen p-8">

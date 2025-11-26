@@ -34,6 +34,7 @@ function Game() {
         }
     }, [gameOver, currentRound, highScore, settings.difficulty, settings.numberOfColors]);
 
+
     const getColorStyle = (isActive: boolean) => {
         const brightness = isActive ? "brightness-150" : "hover:brightness-110";
         return `cursor-pointer transition-all ${brightness}`;
