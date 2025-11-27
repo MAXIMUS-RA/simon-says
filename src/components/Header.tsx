@@ -9,6 +9,7 @@ function Header() {
         { name: "Game", link: "/game" },
         { name: "About", link: "/about" },
         { name: "Settings", link: "/settings" },
+        { name: "Results", link: "/results" },
     ];
 
     const [accentColor, setAccentColor] = useState<string>();

@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { useBussinesLogic } from "../hooks/useBussinesLogic";
 import { useColors } from "../hooks/useColors";
 import GameModal from "../components/modals/GameModal";
+import { useResults } from "../hooks/useResults";
 
 function Game() {
     const { activeColor, currentRound, gameOver, handleColorClick, colorMap, startGame, colors, settings } = useBussinesLogic();
 
     const [accentColor, setAccentColor] = useState("#9333ea");
     const [highScore, setHighScore] = useState(0);
+    const { addResult } = useResults();
 
     useColors(setAccentColor, "accentColor");
 
@@ -21,12 +23,17 @@ function Game() {
     useEffect(() => {
         if (gameOver && currentRound > 0) {
             const finalScore = currentRound - 1;
+            const newData = { time: Date.now(), score: finalScore, difficulty: settings.difficulty, numberOfColors: settings.numberOfColors };
+
             if (finalScore > highScore) {
                 setHighScore(finalScore);
                 localStorage.setItem("simonHighScore", finalScore.toString());
             }
+
+            addResult(newData);
         }
-    }, [gameOver, currentRound, highScore]);
+    }, [gameOver, currentRound, highScore, settings.difficulty, settings.numberOfColors]);
+
 
     const getColorStyle = (isActive: boolean) => {
         const brightness = isActive ? "brightness-150" : "hover:brightness-110";
@@ -105,7 +112,7 @@ function Game() {
             </div>
 
             <div className="relative w-[600px] h-[600px]">
-                <div className="absolute inset-0 rounded-full overflow-hidden">{renderColorButtons()}</div>
+                <div className="absolute -inset-0 rounded-full overflow-hidden">{renderColorButtons()}</div>
 
                 <div
                     className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full border-8 border-[#2a2a4e] shadow-2xl flex items-center justify-center cursor-pointer hover:scale-105 transition-transform z-0"
