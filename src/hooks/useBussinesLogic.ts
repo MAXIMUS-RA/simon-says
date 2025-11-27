@@ -25,6 +25,7 @@ export function useBussinesLogic() {
 
     const loadGameSettings = (): GameSettings => {
         const savedSettings = localStorage.getItem("gameSettings");
+        console.log(savedSettings);
         if (savedSettings) {
             try {
                 const settings = JSON.parse(savedSettings);
@@ -58,6 +59,7 @@ export function useBussinesLogic() {
         orange: "#CC5500",
     };
 
+    console.log(colorMap);
     const startGame = () => {
         setSequenceColor([]);
         setUserSequence([]);
@@ -95,6 +97,7 @@ export function useBussinesLogic() {
         setTimeout(() => setActiveColor(null), 200);
 
         if (color !== sequenceColor[newUserSequence.length - 1]) {
+            
             setGameOver(true);
             return;
         }

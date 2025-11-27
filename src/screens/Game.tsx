@@ -49,7 +49,7 @@ function Game() {
                     return (
                         <div
                             key={color}
-                            className={`absolute inset-0 ${getColorStyle(activeColor === color)}`}
+                            className={`absolute -inset-1 ${getColorStyle(activeColor === color)}`}
                             onClick={() => handleColorClick(color)}
                             style={{
                                 backgroundColor: colorMap[color],
