@@ -3,15 +3,15 @@ import { useBussinesLogic } from "../hooks/useBussinesLogic";
 import { useColors } from "../hooks/useColors";
 import GameModal from "../components/modals/GameModal";
 import { useResults } from "../hooks/useResults";
+import { useSettings } from "../store/storeSettings";
 
 function Game() {
     const { activeColor, currentRound, gameOver, handleColorClick, colorMap, startGame, colors, settings } = useBussinesLogic();
 
-    const [accentColor, setAccentColor] = useState("#9333ea");
+    const { accentColor } = useSettings();
+
     const [highScore, setHighScore] = useState(0);
     const { addResult } = useResults();
-
-    useColors(setAccentColor, "accentColor");
 
     useEffect(() => {
         const saved = localStorage.getItem("simonHighScore");
@@ -33,7 +33,6 @@ function Game() {
             addResult(newData);
         }
     }, [gameOver, currentRound, highScore, settings.difficulty, settings.numberOfColors]);
-
 
     const getColorStyle = (isActive: boolean) => {
         const brightness = isActive ? "brightness-150" : "hover:brightness-110";

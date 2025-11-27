@@ -10,6 +10,9 @@ export function useBussinesLogic() {
     const [gameOver, setGameOver] = useState<boolean>(false);
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
+
+    
+
     const getSpeedFromDifficulty = (difficulty: Difficulty): number => {
         switch (difficulty) {
             case "easy":

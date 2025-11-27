@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router"; // Import useNavigate
+import { useNavigate } from "react-router"; 
 import { useColors } from "../hooks/useColors";
 import { useResults } from "../hooks/useResults";
 
@@ -8,7 +8,7 @@ function Results() {
     const [accentColor, setAccentColor] = useState("#9333ea");
     const [bg, setBg] = useState("#9333ea");
     const { getStats } = useResults();
-    const navigate = useNavigate(); // Initialize hook
+    const navigate = useNavigate(); 
 
 
     useColors(setAccentColor, "accentColor");
@@ -22,7 +22,6 @@ function Results() {
         <div className="w-full min-h-screen p-8">
             <h1 className="text-4xl font-bold text-white mb-8 text-center">Game Results</h1>
 
-            {/* Stats Summary */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div className="bg-white/10 rounded-lg p-6 text-center">
                     <h3 className="text-gray-400 text-sm mb-2">Total Games</h3>

@@ -2,8 +2,11 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import type { Difficulty, SettingsForm } from "../types/settings.types";
 import { useDebounce } from "../hooks/useDebounce";
+import { useSettings } from "../store/storeSettings";
 
 function Settings() {
+    const { accentColor, backgroundColor, difficulty, numberOfColors, setAccentColor, setBackgroundColor, setDifficulty, setNumberOfColors } =
+        useSettings();
     const { handleSubmit, formState, setValue, control } = useForm<SettingsForm>({
         defaultValues: {
             backgroundColor: "#9333ea",
@@ -32,6 +35,11 @@ function Settings() {
             localStorage.setItem("gameSettings", JSON.stringify(data));
             window.dispatchEvent(new Event("settingsUpdated"));
             alert("Settings saved successfully!");
+
+            setAccentColor(data.accentColor);
+            setBackgroundColor(data.backgroundColor);
+            setDifficulty(data.difficulty);
+            setNumberOfColors(data.numberOfColors);
         } catch (error) {
             console.error("Failed to save settings:", error);
             alert("Failed to save settings");
