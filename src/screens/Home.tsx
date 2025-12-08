@@ -13,7 +13,7 @@ function Home() {
                     Test your memory. Beat your high score.
                 </p>
             </div>
-            <CustomBtn link={"game"} name="Game"></CustomBtn>
+            <CustomBtn link={"/game"} name="Game"></CustomBtn>
         </div>
     );
 }

@@ -1,14 +1,14 @@
 import { useParams, useNavigate } from "react-router";
-import { useResults } from "../hooks/useResults";
 import { useSettings } from "../store/storeSettings";
+import { useResults } from "../store/storeResults";
 
 function ResultDetails() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { history } = useResults();
+    const { results } = useResults();
     const { accentColor } = useSettings();
 
-    const game = history.find((g) => g.time === Number(id));
+    const game = results.find((g) => g.time === Number(id));
 
     if (!game) {
         return (

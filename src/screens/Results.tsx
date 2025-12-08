@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router";
-import { useResults } from "../hooks/useResults";
-import { useSettings } from "../store/storeSettings";
+import {  useSettings } from "../store/storeSettings";
+import { useResults } from "../store/storeResults";
+
 
 function Results() {
-    const { accentColor } = useSettings();
     const { getStats } = useResults();
+    const { accentColor } = useSettings();
     const navigate = useNavigate();
     console.log(accentColor);
-
 
     const stats = getStats();
 
