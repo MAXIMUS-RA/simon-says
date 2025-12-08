@@ -1,7 +1,6 @@
-import { useState } from "react";
 import type { ILinks } from "../types/header.types";
 import CustomBtn from "./CustomBtn";
-import { useColors } from "../hooks/useColors";
+import { useSettings } from "../store/storeSettings";
 
 function Header() {
     const links: ILinks[] = [
@@ -12,18 +11,17 @@ function Header() {
         { name: "Results", link: "/results" },
     ];
 
-    const [accentColor, setAccentColor] = useState<string>();
-    const [bgColor, setBgColor] = useState<string>();
-    useColors(setAccentColor);
-    useColors(setBgColor, "backgroundColor");
+
+    const accentColor = useSettings((state) => state.accentColor);
+    const backgroundColor = useSettings((state) => state.backgroundColor);
 
     return (
-        <div className=" shadow-lg py-6 absolute top-0 w-full" style={{ background: `linear-gradient(to right,${accentColor}, ${bgColor})` }}>
+        <div className=" shadow-lg py-6 absolute top-0 w-full" style={{ background: `linear-gradient(to right,${accentColor}, ${backgroundColor})` }}>
             <nav className="container mx-auto flex items-center justify-between">
                 <h1 className="text-white text-2xl font-bold tracking-wider">Simon Says</h1>
                 <ul className="flex space-x-6">
                     {links.map((el) => (
-                        <CustomBtn link={el.link} name={el.name} key={Math.random() * 10} />
+                        <CustomBtn link={el.link} name={el.name} key={el.link} />
                     ))}
                 </ul>
             </nav>

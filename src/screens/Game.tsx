@@ -1,39 +1,26 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react"; // useState більше не потрібен для highScore
 import { useBussinesLogic } from "../hooks/useBussinesLogic";
-import { useColors } from "../hooks/useColors";
 import GameModal from "../components/modals/GameModal";
-import { useResults } from "../hooks/useResults";
+import { useSettings } from "../store/storeSettings";
+import { useResults } from "../store/storeResults";
 
 function Game() {
     const { activeColor, currentRound, gameOver, handleColorClick, colorMap, startGame, colors, settings } = useBussinesLogic();
+    const { accentColor } = useSettings();
 
-    const [accentColor, setAccentColor] = useState("#9333ea");
-    const [highScore, setHighScore] = useState(0);
-    const { addResult } = useResults();
-
-    useColors(setAccentColor, "accentColor");
-
-    useEffect(() => {
-        const saved = localStorage.getItem("simonHighScore");
-        if (saved) {
-            setHighScore(parseInt(saved));
-        }
-    }, []);
+    const { addResult, highScore } = useResults();
 
     useEffect(() => {
         if (gameOver && currentRound > 0) {
             const finalScore = currentRound - 1;
-            const newData = { time: Date.now(), score: finalScore, difficulty: settings.difficulty, numberOfColors: settings.numberOfColors };
-
-            if (finalScore > highScore) {
-                setHighScore(finalScore);
-                localStorage.setItem("simonHighScore", finalScore.toString());
-            }
-
-            addResult(newData);
+            addResult({
+                time: Date.now(),
+                score: finalScore,
+                difficulty: settings.difficulty,
+                numberOfColors: settings.numberOfColors,
+            });
         }
-    }, [gameOver, currentRound, highScore, settings.difficulty, settings.numberOfColors]);
-
+    }, [gameOver, currentRound, settings, addResult]); 
 
     const getColorStyle = (isActive: boolean) => {
         const brightness = isActive ? "brightness-150" : "hover:brightness-110";
