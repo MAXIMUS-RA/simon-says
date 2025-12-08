@@ -1,7 +1,5 @@
-import { useState } from "react";
 import type { ILinks } from "../types/header.types";
 import CustomBtn from "./CustomBtn";
-import { useColors } from "../hooks/useColors";
 import { useSettings } from "../store/storeSettings";
 
 function Header() {
@@ -14,7 +12,8 @@ function Header() {
     ];
 
 
-    const { accentColor, backgroundColor } = useSettings();
+    const accentColor = useSettings((state) => state.accentColor);
+    const backgroundColor = useSettings((state) => state.backgroundColor);
 
     return (
         <div className=" shadow-lg py-6 absolute top-0 w-full" style={{ background: `linear-gradient(to right,${accentColor}, ${backgroundColor})` }}>

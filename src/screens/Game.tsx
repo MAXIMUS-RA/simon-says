@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useBussinesLogic } from "../hooks/useBussinesLogic";
-import { useColors } from "../hooks/useColors";
 import GameModal from "../components/modals/GameModal";
 import { useResults } from "../hooks/useResults";
 import { useSettings } from "../store/storeSettings";

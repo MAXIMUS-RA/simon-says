@@ -1,10 +1,8 @@
-import {  useState } from "react";
 import CustomBtn from "../components/CustomBtn";
-import { useColors } from "../hooks/useColors";
+import { useSettings } from "../store/storeSettings";
 
 function Home() {
-    const [accentColor, setAccentColor] = useState<string>("#9333ea");
-    useColors(setAccentColor);
+    const {accentColor} = useSettings();
     return (
         <div className=" w-full min-h-screen flex flex-col gap-10 justify-center items-center">
             <div className="space-y-4">

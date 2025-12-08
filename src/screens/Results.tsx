@@ -1,26 +1,19 @@
-import { useState } from "react";
-import { useNavigate } from "react-router"; 
-import { useColors } from "../hooks/useColors";
+import { useNavigate } from "react-router";
 import { useResults } from "../hooks/useResults";
-
+import { useSettings } from "../store/storeSettings";
 
 function Results() {
-    const [accentColor, setAccentColor] = useState("#9333ea");
-    const [bg, setBg] = useState("#9333ea");
+    const { accentColor } = useSettings();
     const { getStats } = useResults();
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
 
-
-    useColors(setAccentColor, "accentColor");
-    useColors(setBg, "backgroundColor");
 
     const stats = getStats();
     console.log(stats);
 
-
     return (
         <div className="w-full min-h-screen p-8">
-            <h1 className="text-4xl font-bold text-white mb-8 text-center">Game Results</h1>
+            <h1 className={`text-4xl font-bold text-[${accentColor}] mb-8 text-center`}>Game Results</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div className="bg-white/10 rounded-lg p-6 text-center">

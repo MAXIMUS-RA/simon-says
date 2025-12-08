@@ -5,7 +5,7 @@ import { useDebounce } from "../hooks/useDebounce";
 import { useSettings } from "../store/storeSettings";
 
 function Settings() {
-    const { accentColor, backgroundColor, difficulty, numberOfColors, setAccentColor, setBackgroundColor, setDifficulty, setNumberOfColors } =
+    const { setAccentColor, setBackgroundColor, setDifficulty, setNumberOfColors } =
         useSettings();
     const { handleSubmit, formState, setValue, control } = useForm<SettingsForm>({
         defaultValues: {

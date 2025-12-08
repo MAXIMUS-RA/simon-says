@@ -1,7 +1,6 @@
-import { useState } from "react";
 import { Modal } from "./Modal";
-import { useColors } from "../../hooks/useColors";
 import { useNavigate } from "react-router";
+import { useSettings } from "../../store/storeSettings";
 
 interface GameOverModalProps {
     isOpen: boolean;
@@ -12,8 +11,7 @@ interface GameOverModalProps {
 
 function GameModal({ isOpen, score, highScore, onRestart }: GameOverModalProps) {
     const navigate  = useNavigate();
-    const [accentColor, setAccentColor] = useState("#6366f1");
-    useColors(setAccentColor, "accentColor");
+    const {accentColor} = useSettings();
 
     const isNewHighScore = score === highScore && score > 0;
 

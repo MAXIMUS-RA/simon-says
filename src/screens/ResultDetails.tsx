@@ -1,19 +1,15 @@
 import { useParams, useNavigate } from "react-router";
 import { useResults } from "../hooks/useResults";
-import { useColors } from "../hooks/useColors";
-import { useState } from "react";
+import { useSettings } from "../store/storeSettings";
 
 function ResultDetails() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { history } = useResults();
-    const [accentColor, setAccentColor] = useState("#9333ea");
-    useColors(setAccentColor, "accentColor");
+    const { accentColor } = useSettings();
 
-    // Find the game based on the timestamp ID from the URL
     const game = history.find((g) => g.time === Number(id));
 
-    // Handle case where game is not found (or history hasn't loaded yet)
     if (!game) {
         return (
             <div className="text-center text-white mt-20">
