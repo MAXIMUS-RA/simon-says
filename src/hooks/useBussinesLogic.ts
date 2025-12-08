@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import type { Color } from "../types/bussinesLogic.types";
-import type { Difficulty, GameSettings } from "../types/settings.types";
+import type { Difficulty } from "../types/settings.types";
+import { useSettings } from "../store/storeSettings";
 
 export function useBussinesLogic() {
     const [currentRound, setCurrentRound] = useState<number>(0);
@@ -10,8 +11,8 @@ export function useBussinesLogic() {
     const [gameOver, setGameOver] = useState<boolean>(false);
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
-
-    
+    const difficulty = useSettings((state) => state.difficulty);
+    const numberOfColors = useSettings((state) => state.numberOfColors);
 
     const getSpeedFromDifficulty = (difficulty: Difficulty): number => {
         switch (difficulty) {
@@ -26,29 +27,7 @@ export function useBussinesLogic() {
         }
     };
 
-    const loadGameSettings = (): GameSettings => {
-        const savedSettings = localStorage.getItem("gameSettings");
-        console.log(savedSettings);
-        if (savedSettings) {
-            try {
-                const settings = JSON.parse(savedSettings);
-                return {
-                    difficulty: settings.difficulty || "medium",
-                    numberOfColors: settings.numberOfColors || 4,
-                    speed: getSpeedFromDifficulty(settings.difficulty || "medium"),
-                };
-            } catch (error) {
-                console.error("Failed to load settings:", error);
-            }
-        }
-        return {
-            difficulty: "medium",
-            numberOfColors: 4,
-            speed: 600,
-        };
-    };
-
-    const settings = useMemo(() => loadGameSettings(), []);
+    const settings = useMemo(() => ({ difficulty, numberOfColors, speed: getSpeedFromDifficulty(difficulty) }), [difficulty, numberOfColors]);
 
     const allColors: Color[] = ["blue", "green", "red", "purple", "yellow", "orange"];
     const colors = useMemo(() => allColors.slice(0, settings.numberOfColors), [settings.numberOfColors]);
@@ -62,7 +41,6 @@ export function useBussinesLogic() {
         orange: "#CC5500",
     };
 
-    console.log(colorMap);
     const startGame = () => {
         setSequenceColor([]);
         setUserSequence([]);
@@ -100,7 +78,6 @@ export function useBussinesLogic() {
         setTimeout(() => setActiveColor(null), 200);
 
         if (color !== sequenceColor[newUserSequence.length - 1]) {
-            
             setGameOver(true);
             return;
         }

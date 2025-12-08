@@ -5,19 +5,21 @@ import { useDebounce } from "../hooks/useDebounce";
 import { useSettings } from "../store/storeSettings";
 
 function Settings() {
-    const { setAccentColor, setBackgroundColor, setDifficulty, setNumberOfColors } =
+    const { setAccentColor, setBackgroundColor, setDifficulty, setNumberOfColors,backgroundColor,accentColor,difficulty,numberOfColors } =
         useSettings();
+
+        console.log(backgroundColor);
     const { handleSubmit, formState, setValue, control } = useForm<SettingsForm>({
         defaultValues: {
-            backgroundColor: "#9333ea",
-            accentColor: "#6366f1",
-            difficulty: "medium",
-            numberOfColors: 4,
+            backgroundColor: backgroundColor,
+            accentColor: accentColor,
+            difficulty: difficulty,
+            numberOfColors: numberOfColors,
         },
     });
 
-    const [localBackgroundColor, setLocalBackgroundColor] = useState("#9333ea");
-    const [localAccentColor, setLocalAccentColor] = useState("#6366f1");
+    const [localBackgroundColor, setLocalBackgroundColor] = useState(backgroundColor);
+    const [localAccentColor, setLocalAccentColor] = useState(accentColor);
 
     const debouncedBackgroundColor = useDebounce(localBackgroundColor, 300);
     const debouncedAccentColor = useDebounce(localAccentColor, 300);
@@ -32,36 +34,18 @@ function Settings() {
 
     const onSubmit = (data: SettingsForm) => {
         try {
-            localStorage.setItem("gameSettings", JSON.stringify(data));
-            window.dispatchEvent(new Event("settingsUpdated"));
-            alert("Settings saved successfully!");
-
             setAccentColor(data.accentColor);
             setBackgroundColor(data.backgroundColor);
             setDifficulty(data.difficulty);
             setNumberOfColors(data.numberOfColors);
+            alert("Settings saved successfully!");
         } catch (error) {
             console.error("Failed to save settings:", error);
             alert("Failed to save settings");
         }
     };
 
-    useEffect(() => {
-        const savedSettings = localStorage.getItem("gameSettings");
-        if (savedSettings) {
-            try {
-                const settings = JSON.parse(savedSettings);
-                setLocalBackgroundColor(settings.backgroundColor);
-                setLocalAccentColor(settings.accentColor);
-                setValue("backgroundColor", settings.backgroundColor);
-                setValue("accentColor", settings.accentColor);
-                setValue("difficulty", settings.difficulty);
-                setValue("numberOfColors", settings.numberOfColors);
-            } catch (error) {
-                console.error("Failed to load colors", error);
-            }
-        }
-    }, [setValue]);
+    
 
     const difficultyInfo = {
         easy: { speed: "Slow (1000ms)", description: "Perfect for beginners" },

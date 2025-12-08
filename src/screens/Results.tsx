@@ -6,14 +6,16 @@ function Results() {
     const { accentColor } = useSettings();
     const { getStats } = useResults();
     const navigate = useNavigate();
+    console.log(accentColor);
 
 
     const stats = getStats();
-    console.log(stats);
 
     return (
         <div className="w-full min-h-screen p-8">
-            <h1 className={`text-4xl font-bold text-[${accentColor}] mb-8 text-center`}>Game Results</h1>
+            <h1 className="text-4xl font-bold mb-8 text-center" style={{ color: accentColor }}>
+                Game Results
+            </h1>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div className="bg-white/10 rounded-lg p-6 text-center">

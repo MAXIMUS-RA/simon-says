@@ -9,8 +9,7 @@ import ResultDetails from "./screens/ResultDetails";
 import { useSettings } from "./store/storeSettings";
 
 function AppContent() {
-    const {backgroundColor} = useSettings();
-
+    const backgroundColor = useSettings((state) => state.backgroundColor);
     return (
         <div className="min-h-screen transition-colors duration-300 relative" style={{ backgroundColor }}>
             <Header />
@@ -21,7 +20,6 @@ function AppContent() {
                     <Route path="/about" element={<About />} />
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/results" element={<Results />} />
-                    {/* Dynamic Route for Game Details */}
                     <Route path="/results/:id" element={<ResultDetails />} />
                 </Routes>
             </div>

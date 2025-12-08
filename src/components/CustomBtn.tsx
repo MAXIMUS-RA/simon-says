@@ -1,12 +1,18 @@
 import { NavLink } from "react-router";
-import type { Route } from "../types/routerContext.types";
+import type { ComponentProps } from "react";
 
-function CustomBtn({ link, name, ...props }: { link: Route; name: string; [key: string]: any }) {
+type CustomBtnProps = { link: string; name: string } & Omit<ComponentProps<typeof NavLink>, "to">;
 
+function CustomBtn({ link, name, ...props }: CustomBtnProps) {
     return (
         <NavLink
             to={link}
-            className="list-none text-white px-4 py-2 rounded-full border-2 border-white hover:bg-white hover:text-indigo-600 transition duration-200"
+            className={({ isActive }) =>
+                `px-4 py-2 rounded-full border-2 border-white transition duration-200 ${
+                    isActive ? "bg-white text-indigo-600 font-bold" : "text-white hover:bg-white hover:text-indigo-600"
+                }`
+            }
+            {...props}
         >
             {name}
         </NavLink>
