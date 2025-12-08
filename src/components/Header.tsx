@@ -21,7 +21,7 @@ function Header() {
                 <h1 className="text-white text-2xl font-bold tracking-wider">Simon Says</h1>
                 <ul className="flex space-x-6">
                     {links.map((el) => (
-                        <CustomBtn link={el.link} name={el.name} key={Math.random() * 10} />
+                        <CustomBtn link={el.link} name={el.name} key={el.link} />
                     ))}
                 </ul>
             </nav>

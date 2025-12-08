@@ -13,16 +13,14 @@ function Game() {
     useEffect(() => {
         if (gameOver && currentRound > 0) {
             const finalScore = currentRound - 1;
-            const newData = {
+            addResult({
                 time: Date.now(),
                 score: finalScore,
                 difficulty: settings.difficulty,
                 numberOfColors: settings.numberOfColors,
-            };
-
-            addResult(newData);
+            });
         }
-    }, [gameOver, currentRound, settings.difficulty, settings.numberOfColors, addResult]);
+    }, [gameOver, currentRound, settings, addResult]); 
 
     const getColorStyle = (isActive: boolean) => {
         const brightness = isActive ? "brightness-150" : "hover:brightness-110";

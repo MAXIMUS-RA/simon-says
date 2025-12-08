@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import type { Color } from "../types/bussinesLogic.types";
 import type { Difficulty } from "../types/settings.types";
 import { useSettings } from "../store/storeSettings";
@@ -41,6 +41,57 @@ export function useBussinesLogic() {
         orange: "#CC5500",
     };
 
+
+    const soundFrequencies: Record<Color, number> = {
+        green: 261.63, 
+        red: 293.66, 
+        yellow: 329.63, 
+        blue: 349.23, 
+        purple: 392.0, 
+        orange: 440.0, 
+    };
+
+    const playSound = useCallback((color: Color) => {
+        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+        if (!AudioContext) return;
+
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = "sine"; 
+        osc.frequency.value = soundFrequencies[color];
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5);
+        osc.stop(ctx.currentTime + 0.5);
+    }, []);
+
+    const playErrorSound = useCallback(() => {
+        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+        if (!AudioContext) return;
+
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = "sawtooth"; 
+        osc.frequency.value = 110; 
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.5);
+        osc.stop(ctx.currentTime + 0.5);
+    }, []);
+
+    
+
     const startGame = () => {
         setSequenceColor([]);
         setUserSequence([]);
@@ -56,7 +107,10 @@ export function useBussinesLogic() {
             let index = 0;
             const interval = setInterval(() => {
                 if (index < sequenceColor.length) {
-                    setActiveColor(sequenceColor[index]);
+                    const colorToPlay = sequenceColor[index];
+                    setActiveColor(colorToPlay);
+                    playSound(colorToPlay); 
+
                     setTimeout(() => setActiveColor(null), settings.speed * 0.5);
                     index++;
                 } else {
@@ -66,10 +120,12 @@ export function useBussinesLogic() {
             }, settings.speed);
             return () => clearInterval(interval);
         }
-    }, [sequenceColor, userSequence.length, settings.speed, gameOver]);
+    }, [sequenceColor, userSequence.length, settings.speed, gameOver, playSound]);
 
     const handleColorClick = (color: Color) => {
         if (isPlaying || gameOver) return;
+
+        playSound(color); 
 
         const newUserSequence = [...userSequence, color];
         setUserSequence(newUserSequence);
@@ -78,6 +134,7 @@ export function useBussinesLogic() {
         setTimeout(() => setActiveColor(null), 200);
 
         if (color !== sequenceColor[newUserSequence.length - 1]) {
+            playErrorSound(); 
             setGameOver(true);
             return;
         }
@@ -88,7 +145,7 @@ export function useBussinesLogic() {
                 const nextColor = colors[Math.floor(Math.random() * colors.length)];
                 setSequenceColor([...sequenceColor, nextColor]);
                 setCurrentRound((prev) => prev + 1);
-            }, 500);
+            }, 500); 
         }
     };
 
