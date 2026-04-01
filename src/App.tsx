@@ -7,28 +7,30 @@ import Settings from "./screens/Settings";
 import Results from "./screens/Results";
 import ResultDetails from "./screens/ResultDetails";
 import { useSettings } from "./store/storeSettings";
+import CookieBanner from "./components/CookieBanner";
 
 function AppContent() {
-    const backgroundColor = useSettings((state) => state.backgroundColor);
-    return (
-        <div className="min-h-screen transition-colors duration-300 relative" style={{ backgroundColor }}>
-            <Header />
-            <div className="pt-24 mx-auto container">
-                <Routes>
-                    <Route path="/home" element={<Home />} />
-                    <Route path="/game" element={<Game />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/settings" element={<Settings />} />
-                    <Route path="/results" element={<Results />} />
-                    <Route path="/results/:id" element={<ResultDetails />} />
-                </Routes>
-            </div>
-        </div>
-    );
+   const backgroundColor = useSettings((state) => state.backgroundColor);
+   return (
+      <div className="min-h-screen transition-colors duration-300 relative" style={{ backgroundColor }}>
+         <Header />
+         <div className="pt-24 mx-auto container">
+            <Routes>
+               <Route path="/home" element={<Home />} />
+               <Route path="/game" element={<Game />} />
+               <Route path="/about" element={<About />} />
+               <Route path="/settings" element={<Settings />} />
+               <Route path="/results" element={<Results />} />
+               <Route path="/results/:id" element={<ResultDetails />} />
+            </Routes>
+         </div>
+         <CookieBanner />
+      </div>
+   );
 }
 
 function App() {
-    return <AppContent />;
+   return <AppContent />;
 }
 
 export default App;
