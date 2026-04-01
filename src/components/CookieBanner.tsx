@@ -52,7 +52,7 @@ function CookieBanner() {
       >
          🍪 Цей сайт використовує <strong>cookies</strong> для збереження налаштувань гри та результатів. Це необхідно
          для роботи застосунку згідно з вимогами <strong>GDPR</strong>.{" "}
-         <a href="/about" style={{ color: "#818cf8", textDecoration: "underline" }}>
+         <a href="https://github.com/MAXIMUS-RA/simon-says/blob/master/PRIVACY_POLICY.md" style={{ color: "#818cf8", textDecoration: "underline" }}>
             Дізнатись більше
          </a>
       </CookieConsent>
