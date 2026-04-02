@@ -1,0 +1,12 @@
+{
+  "entryPoints": ["src/components", "src/hooks", "src/store"],
+  "entryPointStrategy": "expand",
+  "out": "docs",
+  "name": "Simon Says — Documentation",
+  "readme": "README.md",
+  "includeVersion": true,
+  "excludeExternals": true,
+  "skipErrorChecking": true,
+  "plugin": [],
+  "theme": "default"
+}

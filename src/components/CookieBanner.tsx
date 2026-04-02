@@ -1,9 +1,14 @@
 import CookieConsent from "react-cookie-consent";
 
 /**
- * GDPR Cookie Consent Banner
- * Відображається при першому відвідуванні.
- * Зберігає вибір користувача в cookie на 365 днів.
+ * GDPR Cookie Consent Banner.
+ *
+ * Відображається при першому відвідуванні сайту.
+ * Зберігає вибір користувача (прийняти/відхилити) у cookie
+ * `simon_says_gdpr_consent` терміном на 365 днів.
+ * Після збереження вибору банер більше не з'являється.
+ *
+ * @see {@link https://gdpr.eu/cookies/ GDPR Cookie Guidelines}
  */
 function CookieBanner() {
    return (
