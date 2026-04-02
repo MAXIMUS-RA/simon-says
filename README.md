@@ -61,3 +61,4 @@ This project is licensed according to the [LICENSE](./LICENSE) file.
 - Author: Maksym Ratsilevych
 - Group: VT-23-1
 - Course: Standardization and documentation
+- [Video](https://drive.google.com/file/d/1P-22ZSALyCtcOTjY0XSti9ZRpoC9lKhk/view?usp=sharing)
